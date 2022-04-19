@@ -24,7 +24,7 @@ if [ -z "$SERVICES" ]; then
     exit 1
 fi
 
-if [ -z "$PKS12" ];then
+if [ -z "$PKS12" ]; then
     PKS12=false
 fi
 
@@ -36,11 +36,16 @@ NEW_CERTS_DIR="$(eval echo ~$USER)/.ssl"
 TARGET_USER="$TARGET_USER"
 USER_GROUP="$(id -ng $TARGET_USER)"
 SERVICES=($(IFS=$' '; echo "${SERVICES[*]}"))
+PKS12=$PKS12
 
 cp "\$CERTS_DIR/fullchain.pem" "\$NEW_CERTS_DIR/server_cert.pem"
 cp "\$CERTS_DIR/privkey.pem" "\$NEW_CERTS_DIR/server_key.pem"
 chown \$TARGET_USER:\$USER_GROUP "\$NEW_CERTS_DIR/server_cert.pem"
 chown \$TARGET_USER:\$USER_GROUP "\$NEW_CERTS_DIR/server_key.pem"
+
+if [ \$PKS12 == "true" ]; then
+    openssl pkcs12 -export -out \$NEW_CERTS_DIR/keystore.p12 -in \$NEW_CERTS_DIR/server_cert.pem -inkey \$NEW_CERTS_DIR/server_key.pem
+fi
 
 for service in "\${SERVICES[@]}"; do
     sudo systemctl restart \$service
@@ -50,4 +55,4 @@ EOF
 
 chmod 750 /etc/letsencrypt/renewal-hooks/deploy/apply_new_certs.sh
 
-echo "Installed for User: $TARGET_USER; Domain: $DOMAIN; After the certs renew, these services will be restarted: $SERVICES; Will a PKS12 key be generated: $PKS12"
+echo "Installed for User: $TARGET_USER; Domain: $DOMAIN; After the certs renew, these services will be restarted: ${SERVICES[*]}; Will a PKS12 key be generated: $PKS12"
