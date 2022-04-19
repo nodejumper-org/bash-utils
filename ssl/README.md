@@ -19,7 +19,7 @@ Arguments:
 
 After running the script lets install cron job for run renew twice a day. Use random minute instead of 34
 ```
-34 0,12 * * * /usr/bin/certbot renew >> /var/log/certbot_renew.log
+crontab -l | { cat; echo "34 0,12 * * * /usr/bin/certbot renew >> /var/log/certbot_renew.log"; } | crontab -
 ```
 
 And configure logrotate for certbot renew logs
