@@ -13,7 +13,7 @@ Arguments:
 ```
 -u - target user (optional, current user by default)
 -d - domain name
--s - service to be restarted after each ssl certificate renewal, you can pass multiple service names
+-s - a service name that will be restarted after every ssl certificate renewal, you can pass this argument multiple times 
 -p - generate PKS12 file (optional, false by dafault)
 ```
 
@@ -26,6 +26,7 @@ And configure logrotate for certbot renew logs
 ```
 sudo tee /etc/logrotate.d/certbot_renew > /dev/null << EOF
 /var/log/certbot_renew.log {
+    su root root
     copytruncate
     daily
     missingok
