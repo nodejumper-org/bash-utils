@@ -38,10 +38,10 @@ USER_GROUP="$(id -ng $TARGET_USER)"
 SERVICES=($(IFS=$' '; echo "${SERVICES[*]}"))
 PKS12=$PKS12
 
-cp "\$CERTS_DIR/fullchain.pem" "\$NEW_CERTS_DIR/server_cert.pem"
-cp "\$CERTS_DIR/privkey.pem" "\$NEW_CERTS_DIR/server_key.pem"
-chown \$TARGET_USER:\$USER_GROUP "\$NEW_CERTS_DIR/server_cert.pem"
-chown \$TARGET_USER:\$USER_GROUP "\$NEW_CERTS_DIR/server_key.pem"
+sudo cp "\$CERTS_DIR/fullchain.pem" "\$NEW_CERTS_DIR/server_cert.pem"
+sudo cp "\$CERTS_DIR/privkey.pem" "\$NEW_CERTS_DIR/server_key.pem"
+sudo chown \$TARGET_USER:\$USER_GROUP "\$NEW_CERTS_DIR/server_cert.pem"
+sudo chown \$TARGET_USER:\$USER_GROUP "\$NEW_CERTS_DIR/server_key.pem"
 
 if [ \$PKS12 == "true" ]; then
     openssl pkcs12 -export -out \$NEW_CERTS_DIR/keystore.p12 -in \$NEW_CERTS_DIR/server_cert.pem -inkey \$NEW_CERTS_DIR/server_key.pem
