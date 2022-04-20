@@ -65,6 +65,6 @@ for service in "\${SERVICES[@]}"; do
 done
 EOF
 
-chmod 750 /etc/letsencrypt/renewal-hooks/deploy/apply_new_certs.sh
+sudo chmod 750 /etc/letsencrypt/renewal-hooks/deploy/apply_new_certs.sh
 
 echo "Installed for User: $TARGET_USER; Domain: $DOMAIN; After the certs renew, these services will be restarted: ${SERVICES[*]}; Will a PKCS12 key be generated: $PKCS12"
