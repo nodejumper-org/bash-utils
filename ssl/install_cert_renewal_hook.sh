@@ -1,13 +1,14 @@
 #!/bin/sh
 
-while getopts u:d:s:p:l: flag
+while getopts u:d:s:p:r:l: flag
 do
+    echo "flag: ${flag} \n value: ${OPTARG}"
     case "${flag}" in
         u) TARGET_USER=$OPTARG;;
         d) DOMAIN=$OPTARG;;
         s) SERVICES+=("$OPTARG");;
         p) PKCS12=true;;
-        r) PKCS12_PASS=$OPTARG
+        r) PKCS12_PASS=$OPTARG;;
         l) OUTPUT_DIR=$OPTARG;;
     esac
 done
@@ -39,23 +40,24 @@ if [ -z "$OUTPUT_DIR" ]; then
     OUTPUT_DIR="/opt/ssl"
 fi
 
-mkdir -p "OUTPUT_DIR"
+sudo mkdir -p "$OUTPUT_DIR"
 
 sudo tee /etc/letsencrypt/renewal-hooks/deploy/apply_new_certs.sh > /dev/null <<EOF
 CERTS_DIR="/etc/letsencrypt/live/$DOMAIN"
+OUTPUT_DIR="$OUTPUT_DIR"
 TARGET_USER="$TARGET_USER"
 USER_GROUP="$(id -ng $TARGET_USER)"
 SERVICES=($(IFS=$' '; echo "${SERVICES[*]}"))
-PKCS12=$PKCS12
-PKCS12_PASS=$PKCS12_PASS
+PKCS12="$PKCS12"
+PKCS12_PASS="$PKCS12_PASS"
 
 sudo cp "\$CERTS_DIR/fullchain.pem" "\$OUTPUT_DIR/server_cert.pem"
 sudo cp "\$CERTS_DIR/privkey.pem" "\$OUTPUT_DIR/server_key.pem"
 sudo chown \$TARGET_USER:\$USER_GROUP "\$OUTPUT_DIR/server_cert.pem"
 sudo chown \$TARGET_USER:\$USER_GROUP "\$OUTPUT_DIR/server_key.pem"
 
-if [ \$PKCS12 == "true" ]; then
-    openssl pkcs12 -export -out \$OUTPUT_DIR/keystore.p12 -passout pass:pkcs12 \$PKCS12_PASS -in \$OUTPUT_DIR/server_cert.pem -inkey \$OUTPUT_DIR/server_key.pem
+if [ "\$PKCS12" == "true" ]; then
+    openssl pkcs12 -export -in \$OUTPUT_DIR/server_cert.pem -inkey \$OUTPUT_DIR/server_key.pem -out \$OUTPUT_DIR/keystore.p12 -password pass:\$PKCS12_PASS
 fi
 
 for service in "\${SERVICES[@]}"; do
