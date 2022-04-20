@@ -6,7 +6,7 @@ This script enables ssl cert autorenewal and restarts your services, if needed. 
 Copy this code to your terminal and change the arguments
 ```
 cd && wget https://raw.githubusercontent.com/nodejumper-org/bash-utils/main/ssl/install_cert_renewal_hook.sh && \
-bash install_cert_renewal_hook.sh -u USER -d DOMAIN -s SERVICE_NAME1 -s SERVICE_NAME2 -p -r pkcs12pass
+bash install_cert_renewal_hook.sh -d your.domain.org -s SERVICE_NAME1 -s SERVICE_NAME2 -p true -r pkcs12pass
 ```
 
 Arguments:
