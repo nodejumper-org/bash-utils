@@ -2,7 +2,6 @@
 
 while getopts u:d:s:p:r:l: flag
 do
-    echo "flag: ${flag} \n value: ${OPTARG}"
     case "${flag}" in
         u) TARGET_USER=$OPTARG;;
         d) DOMAIN=$OPTARG;;
