@@ -1,5 +1,5 @@
 # What problem does it solve
-This script enables ssl cert autorenewal and restarts your services, if needed. The certificate files will appear in the `~/.ssl` directory.
+This script enables ssl cert autorenewal and restarts your services, if needed. The certificate files will appear in the `/opt/ssl` directory.
 
 # How to use
 
