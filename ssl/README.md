@@ -14,7 +14,9 @@ Arguments:
 -u - target user (optional, current user by default)
 -d - domain name
 -s - a service name that will be restarted after every ssl certificate renewal, you can pass this argument multiple times 
--p - generate PKS12 file (optional, false by dafault)
+-p - generate PKCS12 file (optional, false by dafault)
+-r - PKCS12 file password, required if -p option is set
+-l - renewed pem and PKCS12 files output dir (optional, `/opt/ssl` by default)
 ```
 
 After running the script schedule a cron job to run renewal twice a day. Use random minute instead of 34
