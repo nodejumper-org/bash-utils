@@ -36,6 +36,6 @@ sudo tee /etc/logrotate.d/certbot_renew > /dev/null << EOF
 }
 EOF
 
-logrotate /etc/logrotate.d/certbot_renew
+sudo logrotate /etc/logrotate.d/certbot_renew
 ```
 
