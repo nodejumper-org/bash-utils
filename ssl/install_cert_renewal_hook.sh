@@ -42,11 +42,13 @@ fi
 sudo mkdir -p "$OUTPUT_DIR"
 
 sudo tee /etc/letsencrypt/renewal-hooks/deploy/apply_new_certs.sh > /dev/null <<EOF
+#!/bin/sh
+
 CERTS_DIR="/etc/letsencrypt/live/$DOMAIN"
 OUTPUT_DIR="$OUTPUT_DIR"
 TARGET_USER="$TARGET_USER"
 USER_GROUP="$(id -ng $TARGET_USER)"
-SERVICES=($(IFS=$' '; echo "${SERVICES[*]}"))
+SERVICES="$(IFS=$' '; echo "${SERVICES[*]}")"
 PKCS12="$PKCS12"
 PKCS12_PASS="$PKCS12_PASS"
 
@@ -55,11 +57,11 @@ sudo cp "\$CERTS_DIR/privkey.pem" "\$OUTPUT_DIR/server_key.pem"
 sudo chown \$TARGET_USER:\$USER_GROUP "\$OUTPUT_DIR/server_cert.pem"
 sudo chown \$TARGET_USER:\$USER_GROUP "\$OUTPUT_DIR/server_key.pem"
 
-if [ "\$PKCS12" == "true" ]; then
+if "\$PKCS12" == "true"; then
     openssl pkcs12 -export -in \$OUTPUT_DIR/server_cert.pem -inkey \$OUTPUT_DIR/server_key.pem -out \$OUTPUT_DIR/keystore.p12 -password pass:\$PKCS12_PASS
 fi
 
-for service in "\${SERVICES[@]}"; do
+for service in ${SERVICES}; do
     sudo systemctl restart \$service
     sleep 5
 done
